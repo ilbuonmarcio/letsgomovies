@@ -1,0 +1,6 @@
+aiogram
+uvloop
+ujson
+cchardet
+aiodns
+aiohttp
