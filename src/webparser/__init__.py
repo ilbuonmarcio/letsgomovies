@@ -1,5 +1,9 @@
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from bs4 import BeautifulSoup
+
+firefox_headless_options = Options()
+firefox_headless_options.headless = True
 
 
 class Film:
@@ -18,7 +22,7 @@ class TheSpaceWebParser():
         pass
 
     def get_movies(self):
-        driver = webdriver.Firefox()
+        driver = webdriver.Firefox(options=firefox_headless_options)
         driver.get("https://www.thespacecinema.it/al-cinema")
 
         film_elements = driver.find_elements_by_class_name("filmlist__inner")
