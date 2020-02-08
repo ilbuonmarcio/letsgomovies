@@ -12,9 +12,22 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
 dispatcher = Dispatcher(bot)
 
+@dispatcher.message_handler(commands=['help'])
+async def get_help(message: types.Message):
+    await message.reply(
+"""Ciao, sono @letsgomoviesbot,
+un bot per la lista dei film attualmente nelle sale cinema!\n
+Comandi disponibili:\n
+    /movies: richiedi una lista di film attualmente al cinema
+    /help: richiedi informazioni su questo bot
+    
+Il codice sorgente di questo bot é Open Source e disponibile
+presso questo indirizzo: [clicca qui](https://github.com/ilbuonmarcio/letsgomovies)""", parse_mode="Markdown")
 
-@dispatcher.message_handler(commands=['getmovies'])
+@dispatcher.message_handler(commands=['movies'])
 async def get_movies(message: types.Message):
+    await message.reply("Caricamento lista film al cinema in corso...")
+
     parser = TheSpaceWebParser()
     movies = parser.get_movies()
 
