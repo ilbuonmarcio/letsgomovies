@@ -4,6 +4,10 @@
 
 ## Installation
 
+- Make sure you have the proper external software dependencies installed:
+    - Firefox
+    - Firefox's geckodriver executable, available [here](https://github.com/mozilla/geckodriver/releases), added to your system path
+
 - `git clone` this repository
 
 - Create a virtual environment in which this application will run
