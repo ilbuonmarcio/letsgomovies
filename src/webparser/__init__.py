@@ -2,9 +2,6 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 
 
-driver = webdriver.Firefox()
-
-
 class Film:
     def __init__(self, title, genres, link, trailer):
         self.title = title
@@ -21,6 +18,7 @@ class TheSpaceWebParser():
         pass
 
     def get_movies(self):
+        driver = webdriver.Firefox()
         driver.get("https://www.thespacecinema.it/al-cinema")
 
         film_elements = driver.find_elements_by_class_name("filmlist__inner")
@@ -36,6 +34,8 @@ class TheSpaceWebParser():
             genres = [genre.text for genre in soup.findAll("a", {"rv-href": "genre.url"})]
 
             films.append(Film(title, genres, link, trailer))
+
+        driver.close()
 
         return films
 
