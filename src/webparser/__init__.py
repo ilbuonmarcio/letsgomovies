@@ -1,9 +1,20 @@
-import time
+import re
 import requests
-import itertools
 
 from bs4 import BeautifulSoup
 from pprint import pprint
+
+
+class Film:
+    def __init__(self, title, poster, genres, link, trailer):
+        self.title = title
+        self.poster = poster
+        self.genres = genres
+        self.link = link
+        self.trailer = trailer
+
+    def render(self):
+        return f"""([TRAILER]({self.trailer})) [{",".join(self.genres)}] [{self.title}]({self.link})"""
 
 
 class TheSpaceWebParser():
@@ -22,17 +33,21 @@ class TheSpaceWebParser():
         
         films = []
         for elem in film_elements:
-            film_title = elem.findChildren("img", {"class": "ml-movie-boxes__poster"})[0]['alt']
+            film_title = elem.findChildren("img", {"class": "ml-movie-boxes__poster"})[0]['alt'].title()
             film_poster = elem.findChildren("img", {"class": "ml-movie-boxes__poster"})[0]['src']
             film_link = "https://www.thespacecinema.it" + elem.findChildren("a", {"class": "ml-movie-boxes__layer__link"})[0]['href']
             film_trailer = elem.findChildren("a", {"class": "ml-movie-boxes__layer__popup"})[0]['href']
 
-            film_genres = list(itertools.chain(*[token.replace("genre:", "").split(",") for token in elem.findChildren("a", {"class": "ml-movie-boxes__layer__popup"})[0]['data-targeting'].split('|') if "genre:" in token]))
-            
-            print(film_genres)
+            film_genres = []
+            metadata = elem.findChildren("a", {"class": "ml-movie-boxes__layer__popup"})[0]['data-targeting']
+            if "genre:" in metadata:
+                for token in metadata.split("|"):
+                    if "genre:" in token:
+                        genres = token.replace("genre:", "").split(",")
+                        for genre in genres:
+                            film_genres.append(genre)
 
+            films.append(
+                Film(film_title, film_poster, film_genres, film_link, film_trailer))
 
-
-if __name__ == "__main__":
-    parser = TheSpaceWebParser()
-    parser.get_movies() 
+        return films
