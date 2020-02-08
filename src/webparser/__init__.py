@@ -1,11 +1,13 @@
-import requests
+from selenium import webdriver
 from bs4 import BeautifulSoup
 
 
+driver = webdriver.Firefox()
+
+
 class Film:
-    def __init__(self, title, poster, genres, link, trailer):
+    def __init__(self, title, genres, link, trailer):
         self.title = title
-        self.poster = poster
         self.genres = genres
         self.link = link
         self.trailer = trailer
@@ -19,37 +21,25 @@ class TheSpaceWebParser():
         pass
 
     def get_movies(self):
-        page = requests.get("https://www.thespacecinema.it/al-cinema")
+        driver.get("https://www.thespacecinema.it/al-cinema")
 
-        if page.status_code != 200:
-            raise Exception("Unable to get movies")
+        film_elements = driver.find_elements_by_class_name("filmlist__inner")
 
-        soup = BeautifulSoup(page.text, "html.parser")
-
-        film_elements = soup.findAll("div", {"class": "ml-movie-boxes__figure"})
-        
         films = []
         for elem in film_elements:
-            film_title = elem.findChildren("img", {"class": "ml-movie-boxes__poster"})[0]['alt'].title()
-            film_poster = elem.findChildren("img", {"class": "ml-movie-boxes__poster"})[0]['src']
-            film_link = "https://www.thespacecinema.it" + elem.findChildren("a", {"class": "ml-movie-boxes__layer__link"})[0]['href']
-            film_trailer = elem.findChildren("a", {"class": "ml-movie-boxes__layer__popup"})[0]['href']
+            elem_html = elem.get_attribute('innerHTML')
+            soup = BeautifulSoup(elem_html, "html.parser")
 
-            film_genres = []
-            metadata = elem.findChildren("a", {"class": "ml-movie-boxes__layer__popup"})[0]['data-targeting']
-            if "genre:" in metadata:
-                for token in metadata.split("|"):
-                    if "genre:" in token:
-                        genres = token.replace("genre:", "").split(",")
-                        for genre in genres:
-                            film_genres.append(genre)
+            title = soup.find("a", {"class": "filmlist__title"})['data-adobe-title']
+            link = "https://www.thespacecinema.it" + soup.find("a", {"class": "filmlist__title"})['href']
+            trailer = soup.find("a", {"class": "filmlist__showfilm"})['data-videourl']
+            genres = [genre.text for genre in soup.findAll("a", {"rv-href": "genre.url"})]
 
-            films.append(
-                Film(film_title, film_poster, film_genres, film_link, film_trailer))
+            films.append(Film(title, genres, link, trailer))
 
         return films
 
 
 if __name__ == "__main__":
     parser = TheSpaceWebParser()
-    print(parser.get_movies())
+    parser.get_movies()
