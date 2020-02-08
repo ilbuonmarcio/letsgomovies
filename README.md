@@ -2,7 +2,7 @@
 
 `letsgomovies` is a Telegram Bot application in which you can see what movies are currently available in movie theaters!
 
-## installation
+## Installation
 
 - `git clone` this repository
 
@@ -24,7 +24,7 @@
 
 - Run the application by issuing the following command: `python app.py`
 
-## support & contributions
+## Support & contributions
 
 This bot currently supports only [TheSpaceCinema.it](https://www.thespacecinema.it)'s movie list, but I'm sure it will be easy to implement other movie lists as well by the community contributions!
 
