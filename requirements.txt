@@ -4,3 +4,5 @@ ujson
 cchardet
 aiodns
 aiohttp
+requests
+beautifulsoup4
