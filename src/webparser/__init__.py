@@ -19,7 +19,7 @@ class TheSpaceWebParser():
         pass
 
     def get_movies(self):
-        page = requests.get("https://www.thespacecinema.it")
+        page = requests.get("https://www.thespacecinema.it/al-cinema")
 
         if page.status_code != 200:
             raise Exception("Unable to get movies")
@@ -48,3 +48,8 @@ class TheSpaceWebParser():
                 Film(film_title, film_poster, film_genres, film_link, film_trailer))
 
         return films
+
+
+if __name__ == "__main__":
+    parser = TheSpaceWebParser()
+    print(parser.get_movies())
