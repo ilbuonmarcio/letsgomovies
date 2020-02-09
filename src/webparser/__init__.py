@@ -14,7 +14,7 @@ class Film:
         self.trailer = trailer
 
     def render(self):
-        return f"""- ([TRAILER]({self.trailer})) [{", ".join(self.genres)}] [{self.title}]({self.link})"""
+        return f"""- \[[TRAILER]({self.trailer})] ({", ".join(self.genres)}) [{self.title}]({self.link})"""
 
 
 class TheSpaceWebParser():
